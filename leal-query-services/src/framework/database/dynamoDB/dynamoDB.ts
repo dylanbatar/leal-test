@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { randomBytes } from 'crypto';
 import { IMovement } from '../../../core/movements/IMovement';
 import { IUser } from '../../../core/users/IUser';
 import { IRepository } from '../../../domain/ports/IRepository';
@@ -7,14 +8,14 @@ const documentClient = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
 
 export class DynamoDBRead implements IRepository {
   private readonly TABLE = 'Fake_store';
-  constructor() {}
 
   async getPointsByUserId(userId: string): Promise<IUser> {
     const queryParams: AWS.DynamoDB.DocumentClient.QueryInput = {
       TableName: this.TABLE,
-      FilterExpression: 'userId = :usr',
+      FilterExpression: 'userId = :usr and entity = :entity',
       ExpressionAttributeValues: {
-        ':usr': userId
+        ':usr': userId,
+        ':entity': 'user'
       }
     };
     const user = await documentClient.scan(queryParams).promise();
@@ -34,13 +35,29 @@ export class DynamoDBRead implements IRepository {
   }
 
   async sync(data: any): Promise<void> {
-    const item: AWS.DynamoDB.DocumentClient.PutItemInput = {
-      TableName: this.TABLE,
-      Item: {
-        ...data
-      }
-    };
-    await documentClient.put(item).promise();
+    let params: AWS.DynamoDB.DocumentClient.PutItemInput;
+    if (data.type === 'create-order') {
+      params = {
+        TableName: this.TABLE,
+        Item: {
+          id: randomBytes(4).toString('hex'),
+          ...data
+        }
+      };
+      await documentClient.put(params).promise();
+    } else if (data.type === 'update-points') {
+      const params: AWS.DynamoDB.DocumentClient.Update = {
+        TableName: this.TABLE,
+        Key: { id: data.userId },
+        UpdateExpression: 'set points = :points',
+        ExpressionAttributeValues: {
+          ':points': data.points
+        }
+      };
+      await documentClient.update(params).promise();
+      console.info('points sync');
+    }
+
     console.info('database sync');
   }
 }

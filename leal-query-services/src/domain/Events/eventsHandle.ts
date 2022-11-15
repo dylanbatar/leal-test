@@ -1,26 +1,23 @@
-import { IBroker } from '../ports/IBroker';
 import { IRepository } from '../ports/IRepository';
-import { ISyncDatabase } from '../ports/ISyncDatabase';
 
-export class SyncDatabase implements ISyncDatabase {
-  private readonly broker: IBroker;
-  private readonly database: IRepository;
-
-  constructor(broker: IBroker, database: IRepository) {
-    this.broker = broker;
-    this.database = database;
+export class EventsHandle {
+  private readonly repository: IRepository;
+  constructor(repository: IRepository) {
+    this.repository = repository;
   }
 
   async handleEvent(data: any): Promise<void> {
     try {
       if (data.type === 'update-points') {
-        await this.database.sync({
+        await this.repository.sync({
+          type: data.type,
           userId: data.userId,
           points: data.points,
           entity: 'user'
         });
       } else if (data.type === 'create-order') {
-        await this.database.sync({
+        await this.repository.sync({
+          type: data.type,
           userId: data.userId,
           points: data.points,
           entity: 'order',
@@ -34,9 +31,5 @@ export class SyncDatabase implements ISyncDatabase {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  async listenMessageQueue(topic: string): Promise<void> {
-    await this.broker.listen(topic, this.handleEvent);
   }
 }

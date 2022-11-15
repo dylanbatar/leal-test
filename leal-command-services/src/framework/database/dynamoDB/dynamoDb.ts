@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { randomBytes } from 'node:crypto';
+import { randomBytes } from 'crypto';
 
 import { IOrder } from '../../../core/orders/IOrder';
 import { IUser } from '../../../core/users/IUser';
@@ -31,8 +31,8 @@ export class DynamoDB implements IRepository {
 
     const params: AWS.DynamoDB.DocumentClient.Update = {
       TableName: this.TABLE_W,
-      Key: { userId },
-      UpdateExpression: 'set points := :points',
+      Key: { id: userId },
+      UpdateExpression: 'set points = :points',
       ExpressionAttributeValues: {
         ':points': user.points + pointsToAdd
       }
@@ -46,8 +46,8 @@ export class DynamoDB implements IRepository {
 
     const params: AWS.DynamoDB.DocumentClient.Update = {
       TableName: this.TABLE_W,
-      Key: { userId },
-      UpdateExpression: 'set points := :points',
+      Key: { id: userId },
+      UpdateExpression: 'set points = :points',
       ExpressionAttributeValues: {
         ':points': user.points - pointsToDecrease
       }
@@ -60,17 +60,18 @@ export class DynamoDB implements IRepository {
     const item: AWS.DynamoDB.DocumentClient.PutItemInput = {
       TableName: this.TABLE_W,
       Item: {
+        id: randomBytes(4).toString('hex'),
         userId: order.userId,
         points: order.points,
         entity: 'order',
-        orderId: randomBytes(4).toString('utf8'),
+        orderId: randomBytes(4).toString('hex'),
         payMethod: order.payMethod,
         total: order.total,
         products: order.listProduct,
-        date: new Date()
+        date: new Date().toString()
       }
     };
     await documentClient.put(item).promise();
-    throw new Error('Method not implemented.');
+    return order;
   }
 }

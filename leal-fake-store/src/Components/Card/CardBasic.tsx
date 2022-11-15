@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { userId } from "../../global/globales";
 import { OrderUserInterface } from "../../Interfaces/OrderUserInterface";
 
 interface props {
   orderUser: OrderUserInterface;
+  action: any;
 }
-export const CardBasic = ({ orderUser: { titleOrder, desc, price, image, isCashback } }: props) => {
-  const [isButtonCant, setIsButtonCant] = useState(false);
-
-  const handleBuy = () => {};
-
+export const CardBasic = ({
+  orderUser: { titleOrder, desc, price, image, isCashback },
+  action,
+}: props) => {
   return (
     <div className="flex flex-col justify-center">
       <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-md mx-auto border border-white bg-white">
@@ -32,7 +32,15 @@ export const CardBasic = ({ orderUser: { titleOrder, desc, price, image, isCashb
           </div>
 
           <button
-            onClick={handleBuy}
+            onClick={() =>
+              action({
+                userId: userId.toString(),
+                payMethod: isCashback ? "Points" : "Cash",
+                listProduct: [titleOrder],
+                total: Number(price),
+                points: 0,
+              })
+            }
             className="bg-indigo-500 text-white rounded hover:bg-indigo-700 p-1"
           >
             Buy now

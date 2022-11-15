@@ -11,12 +11,14 @@ export class SpendPoints implements ISpendPoints {
     this.broker = broker;
   }
 
-  async spendPoints(userId: string, pointsToDecrease: number): Promise<string> {
+  async spendPoints(userId: string, total: number): Promise<string> {
     const user = await this.repository.findUserById(userId);
 
     if (!user) {
       throw "User doesn't exists";
     }
+
+    const pointsToDecrease = total / 1000;
 
     await this.repository.decreasePoints(userId, pointsToDecrease);
     this.broker.publish('sync-database', { type: 'update-points', userId, points: user.points - pointsToDecrease });

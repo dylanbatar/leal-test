@@ -17,6 +17,7 @@ const initialState: initialStateInterface = {
       msg: "",
     },
   },
+  pointsOrder: 0,
 };
 
 export const ordersUsersSlice = createSlice({
@@ -27,10 +28,13 @@ export const ordersUsersSlice = createSlice({
       state.orderUser.data = action.payload.data;
       state.orderUser.status = typeStatus.success;
     },
+    pointsOrder: (state, action) => {
+      state.pointsOrder = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { getPurchaseOrders } = ordersUsersSlice.actions;
+export const { getPurchaseOrders, pointsOrder } = ordersUsersSlice.actions;
 
 export default ordersUsersSlice.reducer;

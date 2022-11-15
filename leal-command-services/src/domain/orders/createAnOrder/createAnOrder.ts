@@ -26,7 +26,7 @@ export class CreateAnOrder implements ICreateAnOrder {
 
   async createAnOrder(data: IOrder): Promise<IOrder | null> {
     if (data.payMethod === 'Points') {
-      await this.decreasePoints.spendPoints(data.userId, 10);
+      await this.decreasePoints.spendPoints(data.userId, data.total);
     } else {
       await this.addPoints.accumulatePoints(data.userId, data.total);
     }

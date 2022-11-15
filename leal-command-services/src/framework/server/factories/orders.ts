@@ -2,14 +2,16 @@ import { CreateAnOrderController } from '../../../application/orders/createAnOrd
 import { CreateAnOrder } from '../../../domain/orders/createAnOrder/createAnOrder';
 import { AccumulatePoints } from '../../../domain/users/accumulatePoints/accumulatePoints';
 import { SpendPoints } from '../../../domain/users/spendPoints/spendPoints';
-import { InMemory as InMemoryDB } from '../../database/inMemory/inMemory';
+import { DynamoDB } from '../../database/dynamoDB/dynamoDb';
+// import { InMemory as InMemoryDB } from '../../database/inMemory/inMemory';
 import kafkaBroker from './events';
 
 export const makeCreateAnOrder = (): CreateAnOrderController => {
-  const inMemoryDb = new InMemoryDB();
-  const addPoints = new AccumulatePoints(inMemoryDb, kafkaBroker);
-  const decreasePoints = new SpendPoints(inMemoryDb, kafkaBroker);
-  const createAnOrderUseCase = new CreateAnOrder(inMemoryDb, addPoints, decreasePoints, kafkaBroker);
+  // const inMemoryDb = new InMemoryDB();
+  const dynamoDB = new DynamoDB();
+  const addPoints = new AccumulatePoints(dynamoDB, kafkaBroker);
+  const decreasePoints = new SpendPoints(dynamoDB, kafkaBroker);
+  const createAnOrderUseCase = new CreateAnOrder(dynamoDB, addPoints, decreasePoints, kafkaBroker);
   const createAnOrderController = new CreateAnOrderController(createAnOrderUseCase);
   return createAnOrderController;
 };

@@ -1,10 +1,10 @@
-import { GetMovementDetailController } from "../../../application/movements/getMovementDetailController";
-import { GetMovementDetail } from "../../../domain/movements/GetMovementDetail/getMovementDetail";
-import { InMemory as InMemoryDB } from "../../database/inMemory/inMemory";
+import { GetMovementDetailController } from '../../../application/movements/getMovementDetailController';
+import { GetMovementDetail } from '../../../domain/movements/GetMovementDetail/getMovementDetail';
+import { DynamoDBRead } from '../../database/dynamoDB/dynamoDB';
 
 export const makeGetMovementDetail = (): GetMovementDetailController => {
-  const inMemoryDb = new InMemoryDB();
-  const getMovementDetail = new GetMovementDetail(inMemoryDb);
+  const dynamoDB = new DynamoDBRead();
+  const getMovementDetail = new GetMovementDetail(dynamoDB);
   const getMovementDetailControl = new GetMovementDetailController(getMovementDetail);
   return getMovementDetailControl;
 };

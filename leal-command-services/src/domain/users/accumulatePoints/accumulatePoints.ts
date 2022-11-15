@@ -6,7 +6,7 @@ export class AccumulatePoints implements IAccumalatePoints {
   private readonly repository: IRepository;
   private readonly broker: IBroker;
 
-  private readonly POINTS_PER_ORDER: 1000;
+  private readonly POINTS_PER_ORDER = 1000;
 
   constructor(repository: IRepository, broker: IBroker) {
     this.repository = repository;
@@ -15,7 +15,6 @@ export class AccumulatePoints implements IAccumalatePoints {
 
   async accumulatePoints(userId: string, price: number): Promise<string> {
     const user = await this.repository.findUserById(userId);
-
     if (!user) {
       throw "User doesn't exists";
     }

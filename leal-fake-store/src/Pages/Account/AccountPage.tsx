@@ -1,22 +1,39 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { OrdersHistoryUser } from "../../Interfaces/OrderUserInterface";
+import { UserProfileInterface } from "../../Interfaces/UserInterface";
 import { getHistoryOrdersUser } from "../../Services/Api/getHistoryOrdersUser";
+import { getInfoUser } from "../../Services/Api/getInfoUser";
+import { pointsOrder } from "../../Store/Slices/ordersUserSlice";
 
 function AccountPage() {
+  const dispatch = useDispatch();
   const [dataOrdersHistory, setDataOrdersHistory] = useState<OrdersHistoryUser[]>([]);
-
+  const [dataUser, setDataUser] = useState<UserProfileInterface>();
   const getOrdersData = async () => {
-    const result = await getHistoryOrdersUser();
-    if (result !== undefined) {
-      setDataOrdersHistory(result);
+    const [dataOrdersHistory, dataUser] = await Promise.all([
+      await getHistoryOrdersUser(),
+      await getInfoUser(),
+    ]);
+
+    try {
+      setDataUser(dataUser.data);
+      if (dataOrdersHistory !== undefined) setDataOrdersHistory(dataOrdersHistory);
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   };
 
   useEffect(() => {
     getOrdersData();
   }, []);
+
+  useEffect(() => {
+    dispatch(pointsOrder(dataUser?.points));
+  }, [dataUser?.points]);
   return (
-    <main className="w-96 mt-10">
+    <main className="w-80 md:w-96 mt-10">
       <section className="relative py-16 bg-blueGray-200">
         <div className="container mx-auto px-4">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">
@@ -32,26 +49,26 @@ function AccountPage() {
               </div>
               <div className="text-center mt-8">
                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                  Dylan batar
+                  {dataUser?.name} {dataUser?.lastName}
                 </h3>
                 <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
                   Cartagena, Bolivar
                 </div>
                 <div className="mb-2 text-blueGray-600 mt-2">
-                  <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>Solution
-                  Backend Developer - Ssr
+                  <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
+                  {dataUser?.email}
                 </div>
                 <div className="mb-2 text-blueGray-600">
                   <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>
-                  Programming
+                  Points - {dataUser?.points}
                 </div>
               </div>
 
               <div className="my-8">
                 <h3 className="font-black text-gray-700">Historial de pedidos</h3>
 
-                <div className="mt-2 flex flex-row overflow-x-auto">
+                <div className="mt-2 flex flex-row overflow-auto whitespace-nowrap gap-8">
                   {dataOrdersHistory.map((orderHistory) => {
                     return (
                       <ul className="mr-6 " key={orderHistory.orderId}>

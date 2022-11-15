@@ -6,4 +6,5 @@ export interface initialStateInterface {
       msg: string;
     };
   };
+  pointsOrder: number;
 }
