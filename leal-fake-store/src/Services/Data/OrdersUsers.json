@@ -1,0 +1,37 @@
+[
+  {
+    "titleOrder": "Smoothie Acai 12oz",
+    "desc": "Arma tu smoothie de acai con los toppings de tu elección.",
+    "price": "$ 19.300",
+    "image": "https://images.rappi.com/products/2093635047-1627922085299.jpg?e=webp&d=200x200&q=70",
+    "isCashback": true
+  },
+  {
+    "titleOrder": "Bowl Acai 16 Oz",
+    "desc": "Arma tu bowl de acai con los toppings de tu elección.",
+    "price": "$ 27.900",
+    "image": "https://images.rappi.com/products/2093635047-1627922085299.jpg?e=webp&d=200x200&q=70",
+    "isCashback": false
+  },
+  {
+    "titleOrder": "Smoothie Acai 22oz",
+    "desc": "Arma tu smoothie de acai con los toppings de tu elección.",
+    "price": "$ 39.300",
+    "image": "https://images.rappi.com/products/2093635047-1627922085299.jpg?e=webp&d=200x200&q=70",
+    "isCashback": false
+  },
+  {
+    "titleOrder": "Smoothie Acai 42oz",
+    "desc": "Arma tu smoothie de acai con los toppings de tu elección.",
+    "price": "$ 59.300",
+    "image": "https://images.rappi.com/products/2093635047-1627922085299.jpg?e=webp&d=200x200&q=70",
+    "isCashback": true
+  },
+  {
+    "titleOrder": "Smoothie Acai 52oz",
+    "desc": "Arma tu smoothie de acai con los toppings de tu elección.",
+    "price": "$ 19.300",
+    "image": "https://images.rappi.com/products/2093635047-1627922085299.jpg?e=webp&d=200x200&q=70",
+    "isCashback": false
+  }
+]
