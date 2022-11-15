@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint/eslint-plugin", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "prettier"
+  ],
+  "rules": {
+    "no-console": ["error", { "allow": ["warn", "info", "error"] }],
+    "@typescript-eslint/no-explicit-any": "off",
+    "max-len": ["error", { "code": 120, "ignoreUrls": true }],
+    "prettier/prettier": "error"
+  }
+}
