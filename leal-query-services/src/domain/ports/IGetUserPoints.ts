@@ -1,5 +1,5 @@
-import { IUser } from "../../core/users/IUser";
+import { IUser } from '../../core/users/IUser';
 
 export interface IGetUserPoints {
-  getUserPoints(userId: string): Promise<IUser | null>;
+  getUserPoints(userId: string): Promise<IUser | string>;
 }

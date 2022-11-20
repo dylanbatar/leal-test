@@ -15,7 +15,7 @@ export class GetMovementDetailController implements Controller {
     try {
       const { orderId } = req.params;
       const data = await this.getMovementDetailUseCase.getMovementDetail(orderId);
-      return SuccessRequest<IMovement>(data);
+      return SuccessRequest<IMovement | string>(data);
     } catch (error) {
       return ServerError(error);
     }

@@ -9,13 +9,13 @@ export class GetUserPoints implements IGetUserPoints {
     this.repository = repository;
   }
 
-  async getUserPoints(userId: string): Promise<IUser | null> {
-    const points = await this.repository.getPointsByUserId(userId);
+  async getUserPoints(userId: string): Promise<IUser | string> {
+    const user = await this.repository.getPointsByUserId(userId);
 
-    if (!points) {
-      return null;
+    if (!user) {
+      return "User doesn't exist";
     }
 
-    return points;
+    return user;
   }
 }

@@ -9,11 +9,11 @@ export class GetMovementDetail implements IGetMovementDetail {
     this.repository = repository;
   }
 
-  async getMovementDetail(orderId: string): Promise<IMovement | null> {
+  async getMovementDetail(orderId: string): Promise<IMovement | string> {
     const detail = await this.repository.getOrderDetailById(orderId);
 
     if (!detail) {
-      return null;
+      return "Order doesn't exist";
     }
 
     return detail;

@@ -1,3 +1,3 @@
 export interface IBroker {
-  listen(topic: string,callback: Function): Promise<void>;
+  listen(topic: string): Promise<void>;
 }

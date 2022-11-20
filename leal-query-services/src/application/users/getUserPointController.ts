@@ -15,7 +15,7 @@ export class GetUserPointController implements Controller {
     try {
       const { userId } = req.params;
       const data = await this.getUserPoints.getUserPoints(userId);
-      return SuccessRequest<IUser>(data);
+      return SuccessRequest<IUser | string>(data);
     } catch (error) {
       return ServerError(error);
     }
