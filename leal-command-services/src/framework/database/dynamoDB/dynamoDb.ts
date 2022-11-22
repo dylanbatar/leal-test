@@ -17,9 +17,10 @@ export class DynamoDB implements IRepository {
   async findUserById(userId: string): Promise<IUser> {
     const queryParams: AWS.DynamoDB.DocumentClient.QueryInput = {
       TableName: this.TABLE_W,
-      FilterExpression: 'userId = :usr',
+      FilterExpression: 'userId = :usr and entity = :entity',
       ExpressionAttributeValues: {
-        ':usr': userId
+        ':usr': userId,
+        ':entity': 'user'
       }
     };
     const user = await documentClient.scan(queryParams).promise();
@@ -28,7 +29,6 @@ export class DynamoDB implements IRepository {
 
   async addPoints(userId: string, pointsToAdd: number): Promise<void> {
     const user = await this.findUserById(userId);
-
     const params: AWS.DynamoDB.DocumentClient.Update = {
       TableName: this.TABLE_W,
       Key: { id: userId },
@@ -57,21 +57,22 @@ export class DynamoDB implements IRepository {
   }
 
   async createOrder(order: IOrder): Promise<IOrder> {
+    const id = randomBytes(4).toString('hex');
     const item: AWS.DynamoDB.DocumentClient.PutItemInput = {
       TableName: this.TABLE_W,
       Item: {
-        id: randomBytes(4).toString('hex'),
+        id,
         userId: order.userId,
         points: order.points,
         entity: 'order',
-        orderId: randomBytes(4).toString('hex'),
+        orderId: id,
         payMethod: order.payMethod,
         total: order.total,
-        products: order.listProduct,
+        listProducts: order.listProduct,
         date: new Date().toString()
       }
     };
     await documentClient.put(item).promise();
-    return order;
+    return item.Item as IOrder;
   }
 }

@@ -4,7 +4,6 @@ import { IBroker } from '../../ports/IBroker';
 import { ICreateAnOrder } from '../../ports/ICreateAnOrder';
 import { IRepository } from '../../ports/IRepository';
 import { ISpendPoints } from '../../ports/ISpendPoints';
-import { SpendPoints } from '../../users/spendPoints/spendPoints';
 
 export class CreateAnOrder implements ICreateAnOrder {
   private readonly repository: IRepository;
@@ -15,7 +14,7 @@ export class CreateAnOrder implements ICreateAnOrder {
   constructor(
     repository: IRepository,
     accumulatePoints: IAccumalatePoints,
-    spendPoints: SpendPoints,
+    spendPoints: ISpendPoints,
     publisher: IBroker
   ) {
     this.repository = repository;
@@ -24,14 +23,34 @@ export class CreateAnOrder implements ICreateAnOrder {
     this.publisher = publisher;
   }
 
+  private async spendPoints(userId: string, total: number) {
+    const userPoints = await this.decreasePoints.spendPoints(userId, total);
+
+    if (typeof userPoints === 'string') {
+      throw userPoints;
+    }
+
+    return;
+  }
+
+  private async accumulatePoints(userId: string, total: number) {
+    const userPoints = await this.addPoints.accumulatePoints(userId, total);
+
+    if (typeof userPoints === 'string') {
+      throw userPoints;
+    }
+
+    return;
+  }
+
   async createAnOrder(data: IOrder): Promise<IOrder | null> {
     if (data.payMethod === 'Points') {
-      await this.decreasePoints.spendPoints(data.userId, data.total);
-    } else {
-      await this.addPoints.accumulatePoints(data.userId, data.total);
+      await this.spendPoints(data.userId, data.total);
+    } else if (data.payMethod === 'Cash') {
+      await this.accumulatePoints(data.userId, data.total);
     }
-    await this.repository.createOrder(data);
-    this.publisher.publish('sync-database', { type: 'create-order', ...data });
+    const order = await this.repository.createOrder(data);
+    this.publisher.publish('sync-database', { type: 'create-order', ...order });
     return data;
   }
 }
