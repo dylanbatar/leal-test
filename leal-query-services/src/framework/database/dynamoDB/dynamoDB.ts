@@ -16,7 +16,8 @@ export class DynamoDBRead implements IRepository {
       ExpressionAttributeValues: {
         ':usr': userId,
         ':entity': 'user'
-      }
+      },
+      ProjectionExpression: 'id, userId, firstName, lastName, email, points'
     };
     const user = await documentClient.scan(queryParams).promise();
     return user.Items[0] as IUser;
@@ -25,9 +26,10 @@ export class DynamoDBRead implements IRepository {
   async getOrderDetailById(orderId: string): Promise<IMovement> {
     const queryParams: AWS.DynamoDB.DocumentClient.QueryInput = {
       TableName: this.TABLE,
-      FilterExpression: 'orderId = :ord',
+      FilterExpression: 'orderId = :ord and entity = :entity',
       ExpressionAttributeValues: {
-        ':ord': orderId
+        ':ord': orderId,
+        ':entity': 'order'
       }
     };
     const order = await documentClient.scan(queryParams).promise();

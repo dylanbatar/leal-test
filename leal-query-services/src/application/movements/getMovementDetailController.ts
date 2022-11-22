@@ -7,7 +7,7 @@ import { HttpRequest, httpResponse } from '../ports/http';
 export class GetMovementDetailController implements Controller {
   private readonly getMovementDetailUseCase: IGetMovementDetail;
 
-  constructor(getMovementDetailUseCase) {
+  constructor(getMovementDetailUseCase: IGetMovementDetail) {
     this.getMovementDetailUseCase = getMovementDetailUseCase;
   }
 

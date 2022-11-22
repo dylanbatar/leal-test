@@ -1,5 +1,4 @@
 import { IBroker } from '../ports/IBroker';
-import { IRepository } from '../ports/IRepository';
 import { ISyncDatabase } from '../ports/ISyncDatabase';
 
 export class SyncDatabase implements ISyncDatabase {

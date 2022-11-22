@@ -24,7 +24,7 @@ export class EventsHandle {
           orderId: data.orderId,
           payMethod: data.payMethod,
           total: data.total,
-          products: data.listProduct,
+          listProducts: data.listProducts,
           date: data.date
         });
       }
