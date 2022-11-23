@@ -1,31 +1,31 @@
-import { useEffect, useState } from "react";
-import { ThemeContext } from "../Context/themeContext";
-import { ThemeInterface } from "../Interfaces/ThemeInterface";
+import { useEffect, useState } from 'react';
+import { ThemeContext } from '../Context/themeContext';
+import { ITheme } from '../Interfaces/ThemeInterface';
 
 const getInitialTheme = () => {
-  if (typeof window !== "undefined" && window.localStorage) {
-    const storedPrefs = window.localStorage.getItem("current-theme");
-    if (typeof storedPrefs === "string") {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const storedPrefs = window.localStorage.getItem('current-theme');
+    if (typeof storedPrefs === 'string') {
       return storedPrefs;
     }
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
     }
   }
-  return "light";
+  return 'light';
 };
 
-export const ThemeProvider = ({ initialTheme, children }: ThemeInterface) => {
+export const ThemeProvider = ({ initialTheme, children }: ITheme) => {
   const [theme, setTheme] = useState<string>(getInitialTheme);
 
   const checkTheme = (existing: string) => {
     const root = window.document.documentElement;
-    const isDark = existing === "dark";
+    const isDark = existing === 'dark';
 
-    root.classList.remove(isDark ? "light" : "dark");
+    root.classList.remove(isDark ? 'light' : 'dark');
     root.classList.add(existing);
 
-    localStorage.setItem("current-theme", existing);
+    localStorage.setItem('current-theme', existing);
   };
 
   if (initialTheme) {
@@ -36,5 +36,9 @@ export const ThemeProvider = ({ initialTheme, children }: ThemeInterface) => {
     checkTheme(theme);
   }, [theme]);
 
-  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };

@@ -1,16 +1,16 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { initialStateInterface } from "../Interfaces/StoreInterface";
+import { configureStore } from '@reduxjs/toolkit';
+import { IAuthUser, IOrdersHistoryUser } from '../Interfaces/StoreInterface';
 
-import { ordersUsersSlice } from "./Slices/ordersUserSlice";
+import { ordersUsersSlice } from './Slices/ordersUserSlice';
+import { authUsersSlice } from './Slices/authUserSlice';
 
-interface storeInterface {
-  orders: initialStateInterface;
+export interface storeInterface {
+  auth: IAuthUser;
+  orders: IOrdersHistoryUser;
 }
 export const store = configureStore<storeInterface>({
-  reducer: { orders: ordersUsersSlice.reducer },
+  reducer: { auth: authUsersSlice.reducer, orders: ordersUsersSlice.reducer },
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

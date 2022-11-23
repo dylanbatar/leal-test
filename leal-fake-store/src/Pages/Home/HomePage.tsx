@@ -1,65 +1,66 @@
-import { useEffect, useState } from "react";
-import { AlertError } from "../../Components/Alerts/AlertError";
-import { CardBasic } from "../../Components/Card/CardBasic";
-import { OrderUserInterface } from "../../Interfaces/OrderUserInterface";
-import { getOrdersUser } from "../../Services/Api/getOrdersUser";
-import { postOrdersUser } from "../../Services/Api/postOrdersUser";
+import { useEffect } from 'react';
+import { CardBasic } from '../../Components/Card/CardBasic';
+import { postOrdersUser } from '../../Services/Api/postOrdersUser';
+import { useAppDispatch, useAppSelector } from '../../global/globales';
+import { getOrdersUser } from '../../Services/Api/getOrdersUser';
+import { storeInterface } from '../../Store/store';
+import { deleteMsgRespOrderBuy } from '../../Store/Slices/ordersUserSlice';
+import { ToastContainer, toast } from 'react-toastify';
 
 function HomePage() {
-  const [dataOrders, setDataOrders] = useState<OrderUserInterface[]>([]);
-  const [alert, setAlert] = useState({
-    status: false,
-    msg: "",
-    bgColor: "teal",
-  });
+  const dispatch = useAppDispatch();
+  const {
+    productsOrders: { data: dataOrders },
+    respOrderBuy: result,
+  } = useAppSelector((store: storeInterface) => store.orders);
 
-  const { status, msg, bgColor } = alert;
-
-  const getOrdersData = async () => {
-    const result = await getOrdersUser();
-    if (result !== undefined) {
-      setDataOrders(result);
-    }
-  };
-
-  const handleOrder = async (data: any) => {
-    const result = await postOrdersUser(data);
-
-    if (result?.status === 200) {
-      setAlert({
-        ...alert,
-        status: true,
-        msg: "Gracias por su compra !! :)",
-        bgColor: "teal",
-      });
-    } else {
-      setAlert({
-        ...alert,
-        status: true,
-        msg: "Hubo un error en tu compra, Intenta nuevamente",
-        bgColor: "red",
-      });
-    }
+  const handleOrder = async (e: Event, data: any) => {
+    e.preventDefault();
+    dispatch(postOrdersUser(data));
   };
 
   useEffect(() => {
-    getOrdersData();
-  }, []);
+    dataOrders.length === 0 && dispatch(getOrdersUser);
+  }, [dataOrders]);
+
+  useEffect(() => {
+    if (result.value !== null) {
+      if (result.value === 200) {
+        toast.success(result.msg, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'colored',
+          onClose: () => dispatch(deleteMsgRespOrderBuy()),
+          onClick: () => dispatch(deleteMsgRespOrderBuy()),
+        });
+      } else if (result.value === 500) {
+        toast.error(result.msg, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'colored',
+          onClose: () => dispatch(deleteMsgRespOrderBuy()),
+          onClick: () => dispatch(deleteMsgRespOrderBuy()),
+        });
+      }
+    }
+  }, [result]);
 
   return (
-    <div className="mx-8 lg:mx-48 mt-8 mb-24">
-      {alert.status && (
-        <div className="mb-3">
-          <AlertError
-            msg={msg}
-            bgColor={bgColor}
-            action={() => setAlert({ ...alert, status: false })}
-          />
-        </div>
-      )}
+    <div className='mx-8 lg:mx-48 mt-8 mb-24'>
+      <ToastContainer />
       <div
-        className="flex flex-wrap justify-center 
-        md:justify-center lg:justify-center xl:justify-between gap-y-4 "
+        className='flex flex-wrap justify-center 
+        md:justify-center lg:justify-center xl:justify-between gap-y-4 '
       >
         {dataOrders.map((order, index) => {
           return (

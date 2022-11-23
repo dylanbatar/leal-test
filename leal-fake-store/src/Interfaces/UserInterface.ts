@@ -1,4 +1,4 @@
-export interface UserProfileInterface {
+export interface IUserProfile {
   date: string;
   email: string;
   entity: string;
