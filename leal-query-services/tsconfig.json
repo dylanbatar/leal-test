@@ -6,6 +6,5 @@
     "target": "es2019",
     "esModuleInterop": true
   },
-  "include": ["src"],
-  // "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+  "include": ["src"]
 }

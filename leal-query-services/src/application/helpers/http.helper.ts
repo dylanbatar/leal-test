@@ -1,5 +1,3 @@
-import { httpResponse } from '../ports/http';
-
 export const BadRequest = (error: Error) => ({
   statusCode: 400,
   body: error.message || error

@@ -9,6 +9,20 @@ const documentClient = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
 export class DynamoDBRead implements IRepository {
   private readonly TABLE = 'Fake_store';
 
+  async getAllOrderByUserId(userId: string): Promise<IMovement[]> {
+    const queryParams: AWS.DynamoDB.DocumentClient.QueryInput = {
+      TableName: this.TABLE,
+      FilterExpression: 'userId = :usr and entity = :entity',
+      ExpressionAttributeValues: {
+        ':usr': userId,
+        ':entity': 'order'
+      }
+      // ProjectionExpression: 'id, userId, firstName, lastName, email, points'
+    };
+    const user = await documentClient.scan(queryParams).promise();
+    return user.Items as IMovement[];
+  }
+
   async getPointsByUserId(userId: string): Promise<IUser> {
     const queryParams: AWS.DynamoDB.DocumentClient.QueryInput = {
       TableName: this.TABLE,

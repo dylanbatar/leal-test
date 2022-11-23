@@ -14,6 +14,10 @@ describe('GetMovement Detail Controller', () => {
     listProducts: ['test 1']
   };
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should return status code 200 and an order data if the order exists', async () => {
     const fakeDatabse = new FakeDatabase();
     const getMovementDetailMock = new GetMovementDetail(fakeDatabse) as jest.Mocked<GetMovementDetail>;
