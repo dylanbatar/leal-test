@@ -24,7 +24,8 @@ export class AccumulatePoints implements IAccumalatePoints {
     const pointsToAdd = price / this.POINTS_PER_ORDER;
 
     await this.repository.addPoints(userId, pointsToAdd);
-    this.broker.publish('sync-database', { type: 'update-points', userId, points: user.points + pointsToAdd });
+    user.points = user.points + pointsToAdd;
+    this.broker.publish('sync-database', { type: 'update-points', userId, points: user.points });
 
     return user;
   }

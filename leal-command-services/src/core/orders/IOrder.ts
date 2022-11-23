@@ -3,5 +3,5 @@ export interface IOrder {
   total: number;
   payMethod: string;
   points: number;
-  listProduct: string[];
+  listProducts: string[];
 }

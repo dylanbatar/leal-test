@@ -13,8 +13,8 @@ export class CreateAnOrderController implements Controller {
 
   async handle(req: HttpRequest): Promise<httpResponse> {
     try {
-      const { userId, total, payMethod, points, listProduct } = req.body;
-      const data = await this.createAnOrderUseCase.createAnOrder({ userId, total, payMethod, points, listProduct });
+      const { userId, total, payMethod, points, listProducts } = req.body;
+      const data = await this.createAnOrderUseCase.createAnOrder({ userId, total, payMethod, points, listProducts });
       return SuccessRequest<IOrder>(data);
     } catch (error) {
       return ServerError(error);

@@ -30,7 +30,7 @@ export class CreateAnOrder implements ICreateAnOrder {
       throw userPoints;
     }
 
-    return;
+    return true;
   }
 
   private async accumulatePoints(userId: string, total: number) {
@@ -40,15 +40,21 @@ export class CreateAnOrder implements ICreateAnOrder {
       throw userPoints;
     }
 
-    return;
+    return true;
   }
 
   async createAnOrder(data: IOrder): Promise<IOrder | null> {
+    let saveOrder = false;
     if (data.payMethod === 'Points') {
-      await this.spendPoints(data.userId, data.total);
+      saveOrder = await this.spendPoints(data.userId, data.total);
     } else if (data.payMethod === 'Cash') {
-      await this.accumulatePoints(data.userId, data.total);
+      saveOrder = await this.accumulatePoints(data.userId, data.total);
     }
+
+    if (!saveOrder) {
+      return null;
+    }
+
     const order = await this.repository.createOrder(data);
     this.publisher.publish('sync-database', { type: 'create-order', ...order });
     return data;

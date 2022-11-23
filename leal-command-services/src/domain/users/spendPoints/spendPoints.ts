@@ -25,7 +25,8 @@ export class SpendPoints implements ISpendPoints {
     }
 
     await this.repository.decreasePoints(userId, pointsToDecrease);
-    this.broker.publish('sync-database', { type: 'update-points', userId, points: user.points - pointsToDecrease });
+    user.points = user.points - pointsToDecrease;
+    this.broker.publish('sync-database', { type: 'update-points', userId, points: user.points });
 
     return user;
   }
