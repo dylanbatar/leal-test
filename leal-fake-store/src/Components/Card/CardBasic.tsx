@@ -41,7 +41,6 @@ export const CardBasic = ({
           <button
             disabled={disableButton}
             onClick={(e) => {
-              console.log('holis');
               setDisableButton(true);
               setTimeout(() => {
                 setDisableButton(false);
@@ -49,7 +48,7 @@ export const CardBasic = ({
               action(e, {
                 userId: userId.toString(),
                 payMethod: isCashback ? 'Points' : 'Cash',
-                listProduct: [titleOrder],
+                listProducts: [titleOrder],
                 total: Number(price),
                 points: 0,
               });

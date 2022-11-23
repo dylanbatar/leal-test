@@ -68,7 +68,7 @@ export class DynamoDB implements IRepository {
         orderId: id,
         payMethod: order.payMethod,
         total: order.total,
-        listProducts: order.listProduct,
+        listProducts: order.listProducts,
         date: new Date().toString()
       }
     };

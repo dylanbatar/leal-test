@@ -11,10 +11,10 @@ export const getHistoryOrdersUser =
     dispatch(loaderOrderUser());
     try {
       const resp = await fetch(`${BaseUrlGet}/movements/user/${userId}`);
-      const result = await resp.json();
+      const { data } = await resp.json();
 
       if (resp.status === 200) {
-        dispatch(getPurchaseOrders(result));
+        dispatch(getPurchaseOrders(data));
         return;
       }
 

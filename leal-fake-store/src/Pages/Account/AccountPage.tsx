@@ -59,7 +59,7 @@ function AccountPage() {
                   </div>
                   <div className='mb-2 text-blueGray-600'>
                     <i className='fas fa-university mr-2 text-lg text-blueGray-400'></i>
-                    Points - ${dataUser?.points.toFixed(3)}
+                    Points - ${dataUser?.points}
                   </div>
                 </div>
               )}
